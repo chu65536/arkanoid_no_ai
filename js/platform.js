@@ -15,8 +15,4 @@ export class Platform extends Entity {
     this.sprite.position.set(x, y);
     this.sprite.play();
   }
-
-  getSprite() {
-    return this.sprite;
-  }
 }

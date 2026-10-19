@@ -10,7 +10,23 @@ export class Entity {
   move(dx, dy) {
     this.x += dx;
     this.y += dy;
-    this.sprite.x = this.x;
-    this.sprite.y = this.y;
+    this.#updateSprite();
+  }
+
+  moveTo(x, y) {
+    this.x = x;
+    this.y = y;
+    this.#updateSprite();
+  }
+
+  getSprite() {
+    return this.sprite;
+  }
+
+  #updateSprite() {
+    if (this.sprite) {
+      this.sprite.x = this.x;
+      this.sprite.y = this.y;
+    }
   }
 }
