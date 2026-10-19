@@ -9,6 +9,7 @@ import config from "./game_config.js";
     background: "#000000",
     width: config.game.width,
     height: config.game.height,
+    autoDensity: true,
   });
   await PIXI.Assets.load(["assets/sheets/platform.json"]);
 
@@ -31,7 +32,7 @@ import config from "./game_config.js";
     window.innerWidth / config.game.width,
   );
   container.scale.set(scale);
-  app.renderer.resize(window.innerWidth , window.innerHeight);
+  app.renderer.resize(window.innerWidth, window.innerHeight);
 
   const keyboardManager = new KeyboardManager();
   // Listen for animate update
