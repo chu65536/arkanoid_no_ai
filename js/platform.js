@@ -10,9 +10,7 @@ export class Platform extends Entity {
     const sprite = new PIXI.AnimatedSprite(sheet.animations["platform"]);
     super(x, y, config.platform.width, config.platform.height, sprite);
 
-    this.sprite.anchor.set(0.5);
     this.sprite.animationSpeed = 1 / 6;
-    this.sprite.position.set(x, y);
     this.sprite.play();
   }
 }

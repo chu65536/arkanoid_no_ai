@@ -5,6 +5,12 @@ export class Entity {
     this.w = w;
     this.h = h;
     this.sprite = sprite;
+    if (this.sprite) {
+      this.sprite.anchor.set(0.5);
+      this.sprite.position.set(x, y);
+    }
+
+    this.destroyed = false;
   }
 
   move(dx, dy) {

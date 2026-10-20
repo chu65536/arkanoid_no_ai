@@ -1,4 +1,5 @@
 import { Platform } from "./platform.js";
+import { Brick } from "./brick.js";
 
 export class CollisionManager {
   static CollisionSide = Object.freeze({
@@ -37,29 +38,30 @@ export class CollisionManager {
   static checkForBallCollisions(ball, entities) {
     for (const entity of entities) {
       const collisionSide = this.checkCollision(ball, entity);
-      if (collisionSide == this.CollisionSide.NONE) continue;
+      if (entity.destroyed || collisionSide == this.CollisionSide.NONE)
+        continue;
       this.#stuckProtection(ball, entity, collisionSide);
-      if (entity instanceof Platform) {
-        const hitPos = (ball.x - entity.x) / (entity.w / 2);
-        const clampedHitPos = Math.max(-1, Math.min(1, hitPos));
-        const maxAngle = Math.PI / 3;
-        const angle = clampedHitPos * maxAngle;
-        const speed = Math.hypot(ball.dx, ball.dy);
-        ball.dx = speed * Math.sin(angle);
-        ball.dy = -speed * Math.cos(angle);
-      } else {
-        switch (collisionSide) {
-          case CollisionManager.CollisionSide.BOTTOM:
-          case CollisionManager.CollisionSide.TOP:
-            ball.dy *= -1;
-            break;
-          case CollisionManager.CollisionSide.LEFT:
-          case CollisionManager.CollisionSide.RIGHT:
-            ball.dx *= -1;
-            break;
-        }
+      switch (entity.constructor) {
+        case Platform:
+          const hitPos = (ball.x - entity.x) / (entity.w / 2);
+          const clampedHitPos = Math.max(-1, Math.min(1, hitPos));
+          const maxAngle = Math.PI / 3;
+          const angle = clampedHitPos * maxAngle;
+          const speed = Math.hypot(ball.dx, ball.dy);
+          ball.dx = speed * Math.sin(angle);
+          ball.dy = -speed * Math.cos(angle);
+          break;
+        case Brick:
+          entity.collide();
+          this.#changeBallDirection(ball, collisionSide);
+          break;
+        default:
+          this.#changeBallDirection(ball, collisionSide);
+          break;
       }
     }
+
+    entities = entities.filter((entity) => !entity.destroyed);
   }
 
   static #stuckProtection(ball, entity, side) {
@@ -89,5 +91,18 @@ export class CollisionManager {
     const y2 = entity.y + entity.h / 2;
 
     return { x1, y1, x2, y2 };
+  }
+
+  static #changeBallDirection(ball, collisionSide) {
+    switch (collisionSide) {
+      case CollisionManager.CollisionSide.BOTTOM:
+      case CollisionManager.CollisionSide.TOP:
+        ball.dy *= -1;
+        break;
+      case CollisionManager.CollisionSide.LEFT:
+      case CollisionManager.CollisionSide.RIGHT:
+        ball.dx *= -1;
+        break;
+    }
   }
 }

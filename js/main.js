@@ -4,6 +4,7 @@ import { Ball } from "./ball.js";
 import config from "./game_config.js";
 import { CollisionManager } from "./collision_manager.js";
 import { Entity } from "./entity.js";
+import { LevelLoader } from "./level_loader.js";
 
 (async () => {
   const app = new PIXI.Application();
@@ -16,9 +17,20 @@ import { Entity } from "./entity.js";
   });
   await PIXI.Assets.load([
     "assets/sheets/platform.json",
+    "assets/sheets/silver_brick.json",
+    "assets/sheets/golden_brick.json",
 
     "assets/sprites/background.png",
     "assets/sprites/ball.png",
+
+    "assets/sprites/white_brick.png",
+    "assets/sprites/yellow_brick.png",
+    "assets/sprites/red_brick.png",
+    "assets/sprites/blue_brick.png",
+    "assets/sprites/cyan_brick.png",
+    "assets/sprites/green_brick.png",
+    "assets/sprites/orange_brick.png",
+    "assets/sprites/purple_brick.png",
   ]);
 
   document.body.appendChild(app.canvas);
@@ -67,7 +79,18 @@ import { Entity } from "./entity.js";
     config.game.height,
     null,
   );
-  const collideableEntities = [platfrom, topWall, leftWall, rightWall];
+  const bricks = await LevelLoader.load();
+  for (const brick of bricks) {
+    console.log(brick);
+    container.addChild(brick.getSprite());
+  }
+  const collideableEntities = [
+    platfrom,
+    topWall,
+    leftWall,
+    rightWall,
+    ...bricks,
+  ];
 
   app.ticker.add((time) => {
     if (

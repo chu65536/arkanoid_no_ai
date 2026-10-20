@@ -13,10 +13,8 @@ export class Ball extends Entity {
     const sprite = new PIXI.Sprite(PIXI.Assets.get("assets/sprites/ball.png"));
     super(x, y, config.ball.width, config.ball.height, sprite);
 
-    this.sprite.anchor.set(0.5);
-    this.sprite.position.set(x, y);
-
     this.dx = 0;
     this.dy = -1;
   }
+  
 }
